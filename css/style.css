@@ -1,0 +1,222 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: "Segoe UI", Arial, sans-serif;
+  background: #f4f6f8;
+  color: #222;
+  line-height: 1.6;
+}
+
+header {
+  background: #1f2937;
+  color: #fff;
+  padding: 16px 24px;
+}
+
+header .brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+header .brand img {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #fff;
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+}
+
+nav a {
+  color: #fff;
+  text-decoration: none;
+  padding: 6px 10px;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+nav a:hover, nav a.active {
+  background: #374151;
+}
+
+main {
+  max-width: 1000px;
+  margin: 24px auto;
+  padding: 0 16px;
+}
+
+h1 { margin-bottom: 16px; }
+h2 { margin: 20px 0 10px; color: #1f2937; }
+
+section.card {
+  background: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+footer {
+  text-align: center;
+  padding: 16px;
+  color: #6b7280;
+  font-size: 13px;
+}
+
+/* ===== Bài tập 1: Danh sách sản phẩm ===== */
+.search-box {
+  margin-bottom: 16px;
+}
+
+.search-box input {
+  width: 100%;
+  max-width: 320px;
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 16px;
+}
+
+.product-card {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 14px;
+  text-align: center;
+}
+
+.product-card .price {
+  color: #16a34a;
+  font-weight: bold;
+  margin-top: 6px;
+}
+
+.no-result {
+  color: #dc2626;
+  font-weight: bold;
+  padding: 10px 0;
+}
+
+/* ===== Bài tập 2: Form đăng ký ===== */
+.reg-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-width: 420px;
+}
+
+.reg-form label {
+  font-weight: 600;
+  margin-bottom: 4px;
+  display: block;
+}
+
+.reg-form input[type="text"],
+.reg-form input[type="email"],
+.reg-form input[type="password"] {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.reg-form .checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.reg-form button {
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  padding: 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+.reg-form button:hover { background: #1d4ed8; }
+
+.error-msg { color: #dc2626; font-size: 13px; }
+.success-msg {
+  color: #16a34a;
+  font-weight: bold;
+  padding: 10px;
+  background: #ecfdf5;
+  border-radius: 6px;
+}
+
+/* ===== Bài tập 3: Đồng hồ đếm ngược ===== */
+.timer-box {
+  text-align: center;
+  padding: 30px;
+}
+
+.timer-display {
+  font-size: 56px;
+  font-weight: bold;
+  color: #1f2937;
+  transition: color 0.3s;
+}
+
+.timer-display.warning {
+  color: #dc2626;
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+  100% { transform: scale(1); }
+}
+
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-overlay.show { display: flex; }
+
+.modal-box {
+  background: #fff;
+  padding: 30px;
+  border-radius: 10px;
+  text-align: center;
+  max-width: 320px;
+}
+
+.modal-box button {
+  margin-top: 16px;
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  padding: 8px 18px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 600px) {
+  nav ul { flex-direction: column; }
+  .timer-display { font-size: 40px; }
+}

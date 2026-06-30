@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trả lời Lý thuyết - 221A010596</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header>
+  <div class="brand">
+    <img src="images/avatar.jpg" alt="avatar">
+    <div><strong>Trần Duy Tân</strong><br><small>MSSV: 221A010596</small></div>
+  </div>
+  <nav>
+    <ul>
+      <li><a href="index.html">Trang chủ</a></li>
+      <li><a href="baitap01.html">Bài tập 1</a></li>
+      <li><a href="baitap02.html">Bài tập 2</a></li>
+      <li><a href="baitap03.html">Bài tập 3</a></li>
+      <li><a href="lythuyet.html">Trả lời Lý thuyết</a></li>
+      <li><a href="baitap18.html">Bài tập 18</a></li>
+      <li><a href="https://portfolio-tdt110.netlify.app/" target="_blank" rel="noopener">Bài tập 19</a></li>
+      <li><a href="diemdanh.html">Điểm danh</a></li>
+      <li><a href="about.html">Giới thiệu</a></li>
+      <li><a href="contact.html">Liên hệ</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+<section class="card">
+  <h1>Phần 1: Lý thuyết (40 điểm)</h1>
+
+  <h2>Câu 1 (10đ): position: absolute vs position: relative</h2>
+  <p><strong>position: relative</strong> giữ phần tử ở vị trí bình thường trong luồng tài liệu (normal flow),
+  nhưng cho phép dịch chuyển nó (qua top/left/right/bottom) so với chính vị trí gốc của nó mà không ảnh hưởng
+  đến các phần tử xung quanh. Nó cũng thường được dùng làm "điểm neo" (containing block) cho các phần tử con
+  có position: absolute.</p>
+  <p><strong>position: absolute</strong> kéo phần tử ra khỏi luồng tài liệu hoàn toàn, định vị nó dựa trên
+  phần tử cha gần nhất có position khác static (thường là relative). Nếu không có cha nào như vậy, nó định vị
+  theo &lt;body&gt;.</p>
+  <p><strong>Ví dụ tình huống responsive:</strong> Một card sản phẩm dùng <code>position: relative</code>
+  để làm khung chứa, bên trong có một nhãn "Giảm giá" dùng <code>position: absolute; top:0; right:0;</code>
+  để luôn nằm ở góc trên-phải bất kể card co giãn theo kích thước màn hình. Cách này giúp layout responsive
+  vì nhãn luôn bám theo card cha thay vì theo toàn trang.</p>
+  <p><strong>Ảnh hưởng đến deploy/hosting:</strong> Việc dùng sai absolute (ví dụ neo theo body thay vì
+  container) có thể khiến layout vỡ trên màn hình nhỏ khi xem qua các thiết bị khác nhau sau khi deploy,
+  vì vị trí tuyệt đối không tự co giãn theo % linh hoạt như flex/grid. Vì vậy nên kết hợp absolute với
+  relative trong phạm vi nhỏ, và ưu tiên Flexbox/Grid cho bố cục tổng thể để đảm bảo website hiển thị
+  đúng trên nhiều thiết bị sau khi deploy lên hosting.</p>
+
+  <h2>Câu 2 (10đ): Đăng ký domain &amp; cấu hình hosting</h2>
+  <p><strong>Quy trình:</strong></p>
+  <p>1. Đăng ký domain (ví dụ qua Namecheap, GoDaddy, Mắt Bão...) — chọn tên miền, thanh toán, domain được
+  gắn vào tài khoản quản lý DNS.<br>
+  2. Chuẩn bị source code website (HTML/CSS/JS, có thể không cần backend nếu là static site).<br>
+  3. Chọn nơi hosting code (ví dụ GitHub Pages, Netlify, Vercel).<br>
+  4. Trỏ domain về hosting bằng cách cấu hình bản ghi DNS (A record hoặc CNAME record) tại nơi quản lý domain.<br>
+  5. Chờ DNS lan truyền (propagate), thường vài phút đến 48 giờ, rồi truy cập domain để kiểm tra.</p>
+  <p><strong>Vai trò của DNS:</strong> DNS (Domain Name System) đóng vai trò "danh bạ điện thoại" của
+  Internet, dịch tên miền dễ nhớ (ví dụ tandev.com) thành địa chỉ IP của server lưu trữ website. Nếu không
+  có DNS, người dùng phải nhớ địa chỉ IP để truy cập trang web.</p>
+  <p><strong>2 công cụ hỗ trợ deploy miễn phí:</strong></p>
+  <p>- <strong>GitHub Pages:</strong> push code lên repo GitHub, bật tính năng Pages trong Settings, GitHub
+  tự build và host static site, có thể gắn domain riêng qua CNAME.<br>
+  - <strong>Netlify:</strong> kết nối repo GitHub, Netlify tự động build/deploy mỗi khi có commit mới, hỗ trợ
+  HTTPS miễn phí và quản lý DNS/domain riêng dễ dàng.</p>
+  <p><strong>Rủi ro bảo mật nếu cấu hình DNS sai:</strong> Domain có thể bị "domain takeover" (kẻ xấu chiếm
+  quyền nếu bản ghi CNAME trỏ đến dịch vụ đã bị xoá), website không có HTTPS dẫn đến dữ liệu truyền đi
+  không mã hoá (dễ bị nghe lén/man-in-the-middle), hoặc domain bị downtime nếu cấu hình bản ghi A/CNAME sai
+  địa chỉ.</p>
+
+  <h2>Câu 3 (10đ): let, const, var — scope &amp; hoisting</h2>
+  <p><strong>var:</strong> có function scope (chỉ giới hạn trong hàm chứa nó, không theo block {}), được
+  hoisting lên đầu scope và khởi tạo giá trị <code>undefined</code> ngay từ đầu — nên có thể gọi trước khi
+  khai báo mà không lỗi (nhưng giá trị là undefined).</p>
+  <p><strong>let:</strong> có block scope (giới hạn trong cặp {} chứa nó), cũng được hoisting nhưng nằm
+  trong "temporal dead zone" — nếu gọi trước khi khai báo sẽ bị lỗi ReferenceError.</p>
+  <p><strong>const:</strong> giống let về scope và hoisting, nhưng bắt buộc phải gán giá trị ngay khi khai
+  báo và không thể gán lại (re-assign) tên biến đó sau này (tuy nhiên nếu là object/array thì nội dung bên
+  trong vẫn có thể thay đổi).</p>
+  <p><strong>Ví dụ lỗi thường gặp:</strong></p>
+  <pre style="background:#1f2937;color:#f9fafb;padding:12px;border-radius:6px;overflow-x:auto;">
+for (var i = 0; i &lt; 3; i++) {
+  setTimeout(() =&gt; console.log(i), 100);
+}
+// In ra: 3, 3, 3 (vì var không có block scope,
+// cả 3 callback dùng chung 1 biến i sau khi vòng lặp kết thúc)
+
+for (let j = 0; j &lt; 3; j++) {
+  setTimeout(() =&gt; console.log(j), 100);
+}
+// In ra: 0, 1, 2 (vì let tạo block scope riêng cho mỗi lần lặp)
+  </pre>
+  <p><strong>Cách debug bằng Chrome DevTools:</strong> Mở DevTools (F12) → tab Sources, đặt breakpoint tại
+  dòng setTimeout, dùng tab Console để kiểm tra giá trị biến tại từng thời điểm, hoặc dùng
+  <code>console.log</code>/<code>debugger;</code> trong code để theo dõi giá trị biến qua từng vòng lặp,
+  giúp phát hiện vấn đề scope của var so với let.</p>
+
+  <h2>Câu 4 (10đ): Event Delegation</h2>
+  <p>Event Delegation là kỹ thuật gắn một sự kiện (event listener) duy nhất lên phần tử cha, thay vì gắn
+  riêng lẻ cho từng phần tử con. Khi sự kiện xảy ra trên phần tử con, nó sẽ "nổi bọt" (bubble up) lên phần
+  tử cha, và ta dùng <code>event.target</code> để xác định chính xác phần tử con nào đã được tương tác.</p>
+  <p><strong>Ví dụ ứng dụng với danh sách động:</strong> Với một danh sách sản phẩm được thêm/xoá liên tục
+  bằng JavaScript, thay vì gắn sự kiện click cho từng &lt;li&gt; (sẽ mất tác dụng với phần tử mới thêm sau),
+  ta gắn một listener duy nhất lên &lt;ul&gt; cha:</p>
+  <pre style="background:#1f2937;color:#f9fafb;padding:12px;border-radius:6px;overflow-x:auto;">
+document.querySelector("ul").addEventListener("click", function(e) {
+  if (e.target.tagName === "LI") {
+    console.log("Đã click:", e.target.textContent);
+  }
+});
+  </pre>
+  <p><strong>Lợi ích khi tích hợp với HTML/CSS để tối ưu hiệu suất:</strong> Giảm số lượng event listener
+  cần tạo (tiết kiệm bộ nhớ), tự động hoạt động với các phần tử được thêm động sau này mà không cần gắn lại
+  sự kiện, và giúp trang load nhanh hơn khi danh sách có nhiều phần tử (HTML nhẹ hơn về mặt xử lý JS), từ
+  đó tối ưu hiệu suất tổng thể của website.</p>
+</section>
+</main>
+
+<footer>&copy; 2026 Trần Duy Tân - MSSV 221A010596</footer>
+<script src="js/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bài tập 1 - Danh sách sản phẩm</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header>
+  <div class="brand">
+    <img src="images/avatar.jpg" alt="avatar">
+    <div><strong>Trần Duy Tân</strong><br><small>MSSV: 221A010596</small></div>
+  </div>
+  <nav>
+    <ul>
+      <li><a href="index.html">Trang chủ</a></li>
+      <li><a href="baitap01.html">Bài tập 1</a></li>
+      <li><a href="baitap02.html">Bài tập 2</a></li>
+      <li><a href="baitap03.html">Bài tập 3</a></li>
+      <li><a href="lythuyet.html">Trả lời Lý thuyết</a></li>
+      <li><a href="baitap18.html">Bài tập 18</a></li>
+      <li><a href="https://portfolio-tdt110.netlify.app/" target="_blank" rel="noopener">Bài tập 19</a></li>
+      <li><a href="diemdanh.html">Điểm danh</a></li>
+      <li><a href="about.html">Giới thiệu</a></li>
+      <li><a href="contact.html">Liên hệ</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+<section class="card">
+  <h1>Bài tập 1: Danh sách sản phẩm (20 điểm)</h1>
+
+  <div class="search-box">
+    <input type="text" id="searchInput" placeholder="Tìm sản phẩm theo tên...">
+  </div>
+
+  <div id="noResult" class="no-result" style="display:none;">Không tìm thấy sản phẩm phù hợp.</div>
+  <div class="product-grid" id="productGrid"></div>
+</section>
+
+<section class="card">
+  <h2>Giải thích logic tư duy</h2>
+  <p>Dữ liệu sản phẩm được lưu trong một mảng JavaScript (array of objects), mỗi object gồm tên và giá.
+  Khi người dùng gõ vào ô tìm kiếm, sự kiện <code>input</code> được lắng nghe để lọc mảng theo tên sản
+  phẩm (không phân biệt hoa thường bằng cách dùng <code>.toLowerCase()</code> cho cả từ khoá và tên sản
+  phẩm trước khi so sánh bằng <code>.includes()</code>).</p>
+  <p>Để tránh lỗi injection (chèn mã HTML độc hại qua ô input — ví dụ người dùng gõ
+  <code>&lt;img src=x onerror=alert(1)&gt;</code>), thay vì gán trực tiếp giá trị input vào
+  <code>innerHTML</code>, trang này dùng <code>textContent</code> khi hiển thị tên sản phẩm, đảm bảo mọi
+  ký tự HTML được hiển thị dưới dạng văn bản thuần thay vì được trình duyệt thực thi như mã.</p>
+  <p>Về tối ưu tìm kiếm: việc lọc được thực hiện trên mảng đã có sẵn trong bộ nhớ (không gọi lại server),
+  nên tốc độ phản hồi gần như tức thời. Với danh sách lớn hơn trong thực tế, có thể thêm kỹ thuật
+  "debounce" để trì hoãn việc lọc cho đến khi người dùng ngừng gõ khoảng 200-300ms, tránh lọc lại quá
+  nhiều lần khi gõ nhanh.</p>
+</section>
+</main>
+
+<footer>&copy; 2026 Trần Duy Tân - MSSV 221A010596</footer>
+
+<script>
+  const products = [
+    { name: "Bàn phím cơ Akko", price: 890000 },
+    { name: "Chuột không dây Logitech", price: 450000 },
+    { name: "Tai nghe Sony WH-1000XM4", price: 6500000 },
+    { name: "Màn hình LG 24 inch", price: 3200000 },
+    { name: "Webcam Logitech C920", price: 1200000 },
+    { name: "Bàn di chuột Razer", price: 350000 },
+    { name: "Loa Bluetooth JBL", price: 990000 }
+  ];
+
+  const grid = document.getElementById("productGrid");
+  const searchInput = document.getElementById("searchInput");
+  const noResult = document.getElementById("noResult");
+
+  function formatPrice(n) {
+    return n.toLocaleString("vi-VN") + " đ";
+  }
+
+  function renderProducts(list) {
+    grid.innerHTML = "";
+    if (list.length === 0) {
+      noResult.style.display = "block";
+      return;
+    }
+    noResult.style.display = "none";
+
+    list.forEach(function (p) {
+      const card = document.createElement("div");
+      card.className = "product-card";
+
+      const nameEl = document.createElement("div");
+      nameEl.textContent = p.name; // dùng textContent để tránh injection HTML
+
+      const priceEl = document.createElement("div");
+      priceEl.className = "price";
+      priceEl.textContent = formatPrice(p.price);
+
+      card.appendChild(nameEl);
+      card.appendChild(priceEl);
+      grid.appendChild(card);
+    });
+  }
+
+  searchInput.addEventListener("input", function () {
+    const keyword = searchInput.value.trim().toLowerCase();
+    const filtered = products.filter(function (p) {
+      return p.name.toLowerCase().includes(keyword);
+    });
+    renderProducts(filtered);
+  });
+
+  // Hiển thị toàn bộ sản phẩm khi tải trang
+  renderProducts(products);
+</script>
+<script src="js/script.js"></script>
+</body>
+</html>

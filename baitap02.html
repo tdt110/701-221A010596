@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bài tập 2 - Form đăng ký</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header>
+  <div class="brand">
+    <img src="images/avatar.jpg" alt="avatar">
+    <div><strong>Trần Duy Tân</strong><br><small>MSSV: 221A010596</small></div>
+  </div>
+  <nav>
+    <ul>
+      <li><a href="index.html">Trang chủ</a></li>
+      <li><a href="baitap01.html">Bài tập 1</a></li>
+      <li><a href="baitap02.html">Bài tập 2</a></li>
+      <li><a href="baitap03.html">Bài tập 3</a></li>
+      <li><a href="lythuyet.html">Trả lời Lý thuyết</a></li>
+      <li><a href="baitap18.html">Bài tập 18</a></li>
+      <li><a href="https://portfolio-tdt110.netlify.app/" target="_blank" rel="noopener">Bài tập 19</a></li>
+      <li><a href="diemdanh.html">Điểm danh</a></li>
+      <li><a href="about.html">Giới thiệu</a></li>
+      <li><a href="contact.html">Liên hệ</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+<section class="card">
+  <h1>Bài tập 2: Form đăng ký người dùng (20 điểm)</h1>
+
+  <form class="reg-form" id="regForm" novalidate>
+    <div>
+      <label for="fullname">Họ tên</label>
+      <input type="text" id="fullname" name="fullname" required>
+      <div class="error-msg" id="errName"></div>
+    </div>
+
+    <div>
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" required>
+      <div class="error-msg" id="errEmail"></div>
+    </div>
+
+    <div>
+      <label for="password">Mật khẩu</label>
+      <input type="password" id="password" name="password" required>
+      <div class="error-msg" id="errPassword"></div>
+    </div>
+
+    <div class="checkbox-row">
+      <input type="checkbox" id="agree" name="agree">
+      <label for="agree" style="margin:0;font-weight:normal;">Đồng ý điều khoản</label>
+    </div>
+    <div class="error-msg" id="errAgree"></div>
+
+    <button type="submit">Đăng ký</button>
+    <div id="successMsg" class="success-msg" style="display:none;"></div>
+  </form>
+</section>
+
+<section class="card">
+  <h2>Giải thích logic tư duy</h2>
+  <p><strong>Xử lý sự kiện submit:</strong> Gắn listener cho sự kiện <code>submit</code> của form, gọi
+  <code>event.preventDefault()</code> ngay đầu tiên để chặn hành vi reload trang mặc định của trình duyệt,
+  sau đó mới tiến hành validate từng trường. Mỗi trường có hàm kiểm tra riêng và hiển thị thông báo lỗi
+  tương ứng ngay bên dưới ô input, giúp người dùng biết chính xác lỗi ở đâu thay vì chỉ báo lỗi chung
+  chung.</p>
+  <p>Email được kiểm tra bằng regex cơ bản (dạng <code>ten@mien.com</code>). Mật khẩu phải có ít nhất 8 ký
+  tự, bao gồm ít nhất 1 chữ hoa, 1 chữ thường và 1 chữ số — dùng regex
+  <code>/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/</code> để kiểm tra cùng lúc cả 3 điều kiện.</p>
+  <p><strong>Bảo mật dữ liệu cục bộ:</strong> LocalStorage lưu dữ liệu dưới dạng văn bản thuần (plain text)
+  trên trình duyệt người dùng, không mã hoá, nên đây chỉ phù hợp cho mục đích demo/học tập, KHÔNG nên dùng
+  để lưu mật khẩu thật trong ứng dụng thực tế. Trong bài này, mật khẩu vẫn được lưu để minh hoạ thao tác
+  LocalStorage, nhưng cách làm đúng trong thực tế là gửi dữ liệu qua HTTPS đến server, mã hoá mật khẩu bằng
+  thuật toán băm (như bcrypt) trước khi lưu vào database, không bao giờ lưu mật khẩu dạng thô ở phía
+  client.</p>
+</section>
+</main>
+
+<footer>&copy; 2026 Trần Duy Tân - MSSV 221A010596</footer>
+
+<script>
+  const form = document.getElementById("regForm");
+  const successMsg = document.getElementById("successMsg");
+
+  function setError(id, message) {
+    document.getElementById(id).textContent = message;
+  }
+
+  function isValidEmail(value) {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(value);
+  }
+
+  function isValidPassword(value) {
+    // ít nhất 8 ký tự, có chữ hoa, chữ thường, và số
+    const re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+    return re.test(value);
+  }
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault(); // chặn reload trang mặc định
+
+    let valid = true;
+    successMsg.style.display = "none";
+
+    setError("errName", "");
+    setError("errEmail", "");
+    setError("errPassword", "");
+    setError("errAgree", "");
+
+    const fullname = document.getElementById("fullname").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
+    const agree = document.getElementById("agree").checked;
+
+    if (fullname === "") {
+      setError("errName", "Vui lòng nhập họ tên.");
+      valid = false;
+    }
+
+    if (!isValidEmail(email)) {
+      setError("errEmail", "Email không hợp lệ.");
+      valid = false;
+    }
+
+    if (!isValidPassword(password)) {
+      setError("errPassword", "Mật khẩu cần ít nhất 8 ký tự, có chữ hoa, chữ thường và số.");
+      valid = false;
+    }
+
+    if (!agree) {
+      setError("errAgree", "Bạn cần đồng ý điều khoản trước khi đăng ký.");
+      valid = false;
+    }
+
+    if (!valid) return;
+
+    const userData = { fullname: fullname, email: email, password: password };
+    localStorage.setItem("registeredUser_" + Date.now(), JSON.stringify(userData));
+
+    successMsg.textContent = "Đăng ký thành công! Dữ liệu đã được lưu vào LocalStorage.";
+    successMsg.style.display = "block";
+    form.reset();
+  });
+</script>
+<script src="js/script.js"></script>
+</body>
+</html>

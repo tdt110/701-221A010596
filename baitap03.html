@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bài tập 3 - Đồng hồ đếm ngược</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header>
+  <div class="brand">
+    <img src="images/avatar.jpg" alt="avatar">
+    <div><strong>Trần Duy Tân</strong><br><small>MSSV: 221A010596</small></div>
+  </div>
+  <nav>
+    <ul>
+      <li><a href="index.html">Trang chủ</a></li>
+      <li><a href="baitap01.html">Bài tập 1</a></li>
+      <li><a href="baitap02.html">Bài tập 2</a></li>
+      <li><a href="baitap03.html">Bài tập 3</a></li>
+      <li><a href="lythuyet.html">Trả lời Lý thuyết</a></li>
+      <li><a href="baitap18.html">Bài tập 18</a></li>
+      <li><a href="https://portfolio-tdt110.netlify.app/" target="_blank" rel="noopener">Bài tập 19</a></li>
+      <li><a href="diemdanh.html">Điểm danh</a></li>
+      <li><a href="about.html">Giới thiệu</a></li>
+      <li><a href="contact.html">Liên hệ</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+<section class="card">
+  <h1>Bài tập 3: Đồng hồ đếm ngược (20 điểm)</h1>
+
+  <div class="timer-box">
+    <div class="timer-display" id="timerDisplay">10:00</div>
+    <p style="margin-top:14px;">
+      <button id="startBtn" style="padding:8px 16px;margin-right:8px;">Bắt đầu</button>
+      <button id="resetBtn" style="padding:8px 16px;">Đặt lại</button>
+    </p>
+  </div>
+</section>
+
+<section class="card">
+  <h2>Giải thích logic tư duy</h2>
+  <p><strong>Xử lý interval để tránh memory leak:</strong> Biến <code>intervalId</code> được lưu lại khi
+  gọi <code>setInterval</code>. Trước khi bắt đầu một interval mới (ví dụ khi bấm "Bắt đầu" nhiều lần),
+  code luôn gọi <code>clearInterval(intervalId)</code> trước, tránh trường hợp có nhiều interval chạy song
+  song gây rò rỉ bộ nhớ và làm đồng hồ chạy nhanh bất thường. Khi thời gian về 0, <code>clearInterval</code>
+  cũng được gọi ngay lập tức để dừng hẳn, không để interval tiếp tục chạy ngầm vô ích sau khi tác vụ đã
+  hoàn thành.</p>
+  <p><strong>Tích hợp với Domain/Hosting khi deploy:</strong> Nếu đếm ngược chỉ dựa vào đồng hồ máy khách
+  (client-side, dùng <code>setInterval</code>) thì sau khi deploy lên hosting, mỗi người dùng có thể thấy
+  thời gian khác nhau nếu đồng hồ máy họ bị sai lệch, hoặc thời gian sẽ bị reset nếu họ tải lại trang. Để
+  đồng bộ chính xác hơn (ví dụ trong trường hợp đếm ngược một sự kiện thật như mở bán vé), nên lấy mốc thời
+  gian kết thúc (deadline) từ server qua API thay vì tính từ phía client, sau đó client chỉ tính khoảng
+  cách giữa thời gian server trả về và thời gian hiện tại để hiển thị — như vậy thời gian sẽ chính xác và
+  giống nhau cho tất cả người dùng dù truy cập từ thiết bị/độ trễ mạng khác nhau.</p>
+</section>
+</main>
+
+<footer>&copy; 2026 Trần Duy Tân - MSSV 221A010596</footer>
+
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal-box">
+    <h3>Hết giờ!</h3>
+    <p>Thời gian đếm ngược đã kết thúc.</p>
+    <button id="closeModalBtn">Đóng</button>
+  </div>
+</div>
+
+<script>
+  const TOTAL_SECONDS = 10 * 60; // 10 phút
+  let remaining = TOTAL_SECONDS;
+  let intervalId = null;
+
+  const display = document.getElementById("timerDisplay");
+  const startBtn = document.getElementById("startBtn");
+  const resetBtn = document.getElementById("resetBtn");
+  const modalOverlay = document.getElementById("modalOverlay");
+  const closeModalBtn = document.getElementById("closeModalBtn");
+
+  function formatTime(seconds) {
+    const m = Math.floor(seconds / 60).toString().padStart(2, "0");
+    const s = (seconds % 60).toString().padStart(2, "0");
+    return m + ":" + s;
+  }
+
+  function updateDisplay() {
+    display.textContent = formatTime(remaining);
+    if (remaining <= 60) {
+      display.classList.add("warning");
+    } else {
+      display.classList.remove("warning");
+    }
+  }
+
+  function tick() {
+    remaining--;
+    updateDisplay();
+    if (remaining <= 0) {
+      clearInterval(intervalId); // dừng interval ngay khi hết giờ, tránh chạy thừa
+      intervalId = null;
+      modalOverlay.classList.add("show");
+    }
+  }
+
+  startBtn.addEventListener("click", function () {
+    if (intervalId !== null) {
+      clearInterval(intervalId); // tránh tạo nhiều interval song song (memory leak)
+    }
+    intervalId = setInterval(tick, 1000);
+  });
+
+  resetBtn.addEventListener("click", function () {
+    if (intervalId !== null) {
+      clearInterval(intervalId);
+      intervalId = null;
+    }
+    remaining = TOTAL_SECONDS;
+    updateDisplay();
+    modalOverlay.classList.remove("show");
+  });
+
+  closeModalBtn.addEventListener("click", function () {
+    modalOverlay.classList.remove("show");
+  });
+
+  updateDisplay();
+</script>
+<script src="js/script.js"></script>
+</body>
+</html>
